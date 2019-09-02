@@ -54,4 +54,13 @@ class AccountController extends Controller
             'expires_at' => Carbon::parse($token->token->expires_at)->toDateTimeString()
         ]);
     }
+
+
+    public function logout(Request $request)
+    {
+        $request->user()->token()->revoke();
+        return response()->json([
+            'message' => 'Successfully logged out'
+        ],200);
+    }
 }

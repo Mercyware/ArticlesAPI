@@ -4,8 +4,12 @@ namespace App\Providers;
 
 use App\Interfaces\IArticleRepository;
 use App\Interfaces\IArticleService;
+use App\Interfaces\IUserRepository;
+use App\Interfaces\IUserService;
 use App\Repository\ArticleRepository;
+use App\Repository\UserRepository;
 use App\Services\ArticleService;
+use App\Services\UserService;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\ServiceProvider;
 
@@ -42,6 +46,7 @@ class AppServiceProvider extends ServiceProvider
      */
     private static $repositoryInterfaces = [
         IArticleRepository::class => ArticleRepository::class,
+        IUserRepository::class => UserRepository::class,
 
     ];
     /**
@@ -51,7 +56,7 @@ class AppServiceProvider extends ServiceProvider
      */
     private static $servicesInterfaces = [
         IArticleService::class => ArticleService::class,
-
+        IUserService::class => UserService::class,
     ];
 
     /**

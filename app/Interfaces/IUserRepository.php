@@ -8,5 +8,5 @@ interface IUserRepository
 {
     public function createUser($attributes);
 
-    public function getUser(string $email, string $password);
+    public function getUserByEmail(string $email);
 }

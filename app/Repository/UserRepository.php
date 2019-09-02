@@ -30,8 +30,8 @@ class UserRepository implements IUserRepository
 
     }
 
-    public function getUser(string $email, string $password)
+    public function getUserByEmail(string $email)
     {
-
+        return $this->user->where('email', $email)->first();
     }
 }
