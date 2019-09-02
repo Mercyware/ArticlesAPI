@@ -1,0 +1,98 @@
+<?php
+
+
+namespace App\Services;
+
+use App\Http\Resources\ArticleCollection;
+use App\Http\Resources\ArticleResource;
+use App\Http\Resources\RateResource;
+use App\Interfaces\IArticleRepository;
+use App\Interfaces\IArticleService;
+
+class ArticleService implements IArticleService
+{
+
+    /**
+     * @var IArticleRepository
+     */
+    private $articleRepository;
+
+    public function __construct(IArticleRepository $articleRepository)
+    {
+        $this->articleRepository = $articleRepository;
+    }
+
+    public function getArticles()
+    {
+
+
+        return new ArticleCollection($this->articleRepository->getArticles());
+
+    }
+
+    public function getAnArticle($article_id)
+    {
+
+
+        ArticleResource::withoutWrapping();
+        $article = $this->articleRepository->getAnArticleByArticleID($article_id);
+
+        if ($article) {
+            return new ArticleResource($article);
+
+        } else {
+            return null;
+        }
+
+
+    }
+
+    public function searchArticle($search_string)
+    {
+        return new ArticleCollection($this->articleRepository->searchArticles($search_string));
+    }
+
+
+    public function createArticle($attributes)
+    {
+        ArticleResource::withoutWrapping();
+
+        $article = $this->articleRepository->createArticle($attributes);
+
+        return new ArticleResource($article);
+
+    }
+
+    public function updateArticle($attributes, $article_id)
+    {
+        try {
+            ArticleResource::withoutWrapping();
+            $article = $this->articleRepository->updateArticle($attributes, $article_id);
+
+            if ($article) {
+                $article = $this->articleRepository->getAnArticleByArticleID($article_id);
+                return new ArticleResource($article);
+            }
+            return null;
+        } catch (\Exception $exception) {
+            return $exception->getMessage();
+        }
+
+    }
+
+    public function deleteArticle($article_id)
+    {
+        $article = $this->articleRepository->deleteArticle($article_id);
+    }
+
+    public function rateArticle($attributes, $article_id)
+    {
+        RateResource::withoutWrapping();
+
+        $rate = $this->articleRepository->rateArticle($attributes, $article_id);
+
+        return new RateResource($rate);
+
+
+    }
+}
