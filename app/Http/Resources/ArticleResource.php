@@ -21,6 +21,7 @@ class ArticleResource extends JsonResource
             'slug' => $this->slug,
             'title' => $this->title,
             'article' => $this->article,
+            'rating' =>  RateResource::collection($this->Ratings),
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

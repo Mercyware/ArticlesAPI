@@ -8,6 +8,8 @@ use App\Http\Resources\ArticleResource;
 use App\Http\Resources\RateResource;
 use App\Interfaces\IArticleRepository;
 use App\Interfaces\IArticleService;
+use http\Exception;
+use phpDocumentor\Reflection\Types\Null_;
 
 class ArticleService implements IArticleService
 {
@@ -55,44 +57,48 @@ class ArticleService implements IArticleService
 
     public function createArticle($attributes)
     {
+
+
         ArticleResource::withoutWrapping();
-
         $article = $this->articleRepository->createArticle($attributes);
+        if ($article) {
+            return new ArticleResource($article);
 
-        return new ArticleResource($article);
+        }
+        return null;
 
     }
 
     public function updateArticle($attributes, $article_id)
     {
-        try {
-            ArticleResource::withoutWrapping();
-            $article = $this->articleRepository->updateArticle($attributes, $article_id);
 
-            if ($article) {
-                $article = $this->articleRepository->getAnArticleByArticleID($article_id);
-                return new ArticleResource($article);
-            }
-            return null;
-        } catch (\Exception $exception) {
-            return $exception->getMessage();
+        ArticleResource::withoutWrapping();
+        $article = $this->articleRepository->getAnArticleByArticleID($article_id);
+        if ($article) {
+            $this->articleRepository->updateArticle($attributes, $article_id);
+            return new ArticleResource($article);
         }
+
+        return null;
+
 
     }
 
     public function deleteArticle($article_id)
     {
-        $article = $this->articleRepository->deleteArticle($article_id);
+        $this->articleRepository->deleteArticle($article_id);
+        return null;
     }
 
     public function rateArticle($attributes, $article_id)
     {
+
         RateResource::withoutWrapping();
-
         $rate = $this->articleRepository->rateArticle($attributes, $article_id);
+        if ($rate) {
+            return new RateResource($rate);
 
-        return new RateResource($rate);
-
-
+        }
+        return null;
     }
 }

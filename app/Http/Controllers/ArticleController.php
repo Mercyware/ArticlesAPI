@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 
+use App\Http\Requests\ArticleRequest;
+use App\Http\Requests\RateRequest;
 use App\Http\Resources\ArticleCollection;
 use App\Http\Resources\ArticleResource;
 use App\Interfaces\IArticleService;
@@ -42,7 +44,7 @@ class ArticleController extends Controller
     {
         $article = $this->articleService->getAnArticle($article_id);
         if (!$article) {
-            return abort(404);
+            return response()->json(["message" => 'The article does not exist'], 404);
         }
 
         return $article;
@@ -55,27 +57,75 @@ class ArticleController extends Controller
 
     }
 
-    public function createArticles(Request $request)
+    public function createArticles(ArticleRequest $request)
     {
-        return $this->articleService->createArticle($request);
+        try {
+            $article = $this->articleService->createArticle($request);
+
+            if (!$article) {
+                return response()->json(["message" => 'An unknown error has occurred. Unable to create new article'], 500);
+            }
+            return $article->response()->setStatusCode(201);
+
+        } catch (\Exception $exception) {
+            return response()->json(["message" => $exception->getMessage()], 500);
+
+        }
+
     }
 
-    public function updateArticle(Request $request)
+    public function updateArticle(ArticleRequest $request, $article_id)
     {
 
-        return $this->articleService->updateArticle($request, 51);
+
+        try {
+            $article = $this->articleService->updateArticle($request, $article_id);
+            if (!$article) {
+                return response()->json(["message" => 'The article does not exist'], 404);
+            }
+            return $article->response()->setStatusCode(202);
+
+        } catch (\Exception $exception) {
+            return response()->json(["message" => $exception->getMessage()], 500);
+
+        }
+
     }
 
     public function deleteArticle($article_id)
     {
 
+        try {
+            $article = $this->articleService->deleteArticle($article_id);
+            if ($article == null) {
+                return response()->json(["message" => 'Article has been deleted'], 204);
+            }
+            return response()->json(['message' => "Unable to delete article"], 500);
 
-        return $this->articleService->deleteArticle($article_id);
+        } catch (\Exception $exception) {
+            return response()->json(["message" => $exception->getMessage()], 500);
+
+        }
+
+
     }
 
 
-    public function rateArticle(Request $request, $article_id)
+    public function rateArticle(RateRequest $request, $article_id)
     {
-        return $this->articleService->rateArticle($request, $article_id);
+
+        try {
+            $rate = $this->articleService->rateArticle($request, $article_id);
+            if (!$rate) {
+                return response()->json(["message" => 'An unknown error has occurred. Unable to create rating'], 500);
+            }
+            return $rate->response()->setStatusCode(201);
+
+        } catch (\Exception $exception) {
+            return response()->json(["message" => $exception->getMessage()], 500);
+
+        }
+
+
     }
 }

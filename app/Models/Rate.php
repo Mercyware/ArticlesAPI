@@ -8,5 +8,8 @@ class Rate extends Model
 {
 
     protected $guarded = [];
+
     //
+
+
 }

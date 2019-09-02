@@ -27,4 +27,9 @@ class Article extends Model
             ]
         ];
     }
+
+    public function Ratings()
+    {
+        return $this->hasMany(Rate::class, 'article_id');
+    }
 }
