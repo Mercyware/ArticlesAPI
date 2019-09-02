@@ -44,18 +44,14 @@ class AccountController extends Controller
 
         $credentials = request(['email', 'password']);
 
-        if ($this->userService->login($credentials))
+        $token = $this->userService->login($credentials);
+        if (!$token)
             return response()->json(['message' => 'Unauthorized'], 401);
-        $user = $request->user();
-        $tokenResult = $user->createToken('Personal Access Token');
-        $token = $tokenResult->token;
-        if ($request->remember_me)
-            $token->expires_at = Carbon::now()->addWeeks(1);
-        $token->save();
+
         return response()->json([
-            'access_token' => $tokenResult->accessToken,
+            'access_token' => $token->accessToken,
             'token_type' => 'Bearer',
-            'expires_at' => Carbon::parse($tokenResult->token->expires_at)->toDateTimeString()
+            'expires_at' => Carbon::parse($token->token->expires_at)->toDateTimeString()
         ]);
     }
 }

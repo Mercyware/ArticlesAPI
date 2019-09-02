@@ -6,6 +6,7 @@ namespace App\Services;
 
 use App\Interfaces\IUserRepository;
 use App\Interfaces\IUserService;
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 
 class UserService implements IUserService
@@ -30,7 +31,14 @@ class UserService implements IUserService
         if (!Auth::attempt($attributes)) {
             return false;
         }
+        $user = $attributes->user();
 
+        $tokenResult = $user->createToken('Personal Access Token');
+        $token = $tokenResult->token;
+        if ($attributes->remember_me)
+            $token->expires_at = Carbon::now()->addWeeks(1);
+        $token->save();
+        return $tokenResult;
     }
 
 }
