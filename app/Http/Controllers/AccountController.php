@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\LoginRequest;
 use App\Http\Requests\UserRequest;
 use App\Interfaces\IUserService;
 use Carbon\Carbon;
@@ -39,19 +40,20 @@ class AccountController extends Controller
     }
 
 
-    public function login(Request $request)
+    public function login(LoginRequest $request)
     {
 
         $credentials = request(['email', 'password']);
 
         $token = $this->userService->login($credentials);
+
         if (!$token)
             return response()->json(['message' => 'Unauthorized'], 401);
 
         return response()->json([
-            'access_token' => $token->accessToken,
-            'token_type' => 'Bearer',
-            'expires_at' => Carbon::parse($token->token->expires_at)->toDateTimeString()
+            "data" => ['access_token' => $token->accessToken,
+                'token_type' => 'Bearer',
+                'expires_at' => Carbon::parse($token->token->expires_at)->toDateTimeString()]
         ]);
     }
 
@@ -61,6 +63,6 @@ class AccountController extends Controller
         $request->user()->token()->revoke();
         return response()->json([
             'message' => 'Successfully logged out'
-        ],200);
+        ], 200);
     }
 }

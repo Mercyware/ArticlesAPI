@@ -30,7 +30,8 @@ class ArticleController extends Controller
      */
     public function getArticles()
     {
-        return $this->articleService->getArticles();
+        $articles = $this->articleService->getArticles();
+        return $articles->response()->setStatusCode(200);
     }
 
     /**
@@ -47,13 +48,13 @@ class ArticleController extends Controller
             return response()->json(["message" => 'The article does not exist'], 404);
         }
 
-        return $article;
+        return $article->response()->setStatusCode(200);
     }
 
     public function searchArticle(Request $request)
     {
         $articles = $this->articleService->searchArticle($request->q);
-        return $articles;
+        return $articles->response()->setStatusCode(200);
 
     }
 

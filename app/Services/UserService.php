@@ -30,15 +30,12 @@ class UserService implements IUserService
     {
 
         if (!Auth::attempt($attributes)) {
-            return false;
+            return null;
         }
 
         $user = $this->userRepository->getUserByEmail($attributes['email']);
-
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
-        // if ($attributes->remember_me)
-       // $token->expires_at = Carbon::now()->addWeeks(1);
         $token->save();
         return $tokenResult;
     }

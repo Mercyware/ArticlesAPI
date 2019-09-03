@@ -24,12 +24,12 @@ Route::prefix('articles')->group(function () {
     Route::get('{article_id}', 'ArticleController@getAnArticle')->name('article');
     Route::patch('{article_id}', 'ArticleController@updateArticle')->name('article.update')->middleware('auth:api');
     Route::delete('{article_id}', 'ArticleController@deleteArticle')->name('article.delete')->middleware('auth:api');
-    Route::post('{article_id}/rating', 'ArticleController@rateArticle')->name('article.rate')->middleware('auth:api');
+    Route::post('{article_id}/rating', 'ArticleController@rateArticle')->name('article.rate');
 
 });
 
 Route::get('/article/search', 'ArticleController@searchArticle')->name('article.search');
 
 Route::fallback(function () {
-    return response()->json(['message' => 'Not Found!'], 404);
+    return response()->json(['message' => 'Requested Page Not Found!'], 404);
 });
