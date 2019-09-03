@@ -4,10 +4,12 @@
 namespace App\Interfaces;
 
 
+use App\Models\Article;
+
 interface IArticleRepository
 {
 
-    public function createArticle($attributes);
+    public function createArticle($attributes):Article;
 
     public function updateArticle($attributes, $article_id);
 

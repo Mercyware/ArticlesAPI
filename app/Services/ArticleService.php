@@ -8,8 +8,7 @@ use App\Http\Resources\ArticleResource;
 use App\Http\Resources\RateResource;
 use App\Interfaces\IArticleRepository;
 use App\Interfaces\IArticleService;
-use http\Exception;
-use phpDocumentor\Reflection\Types\Null_;
+
 
 class ArticleService implements IArticleService
 {

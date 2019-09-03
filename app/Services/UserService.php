@@ -37,6 +37,10 @@ class UserService implements IUserService
         $tokenResult = $user->createToken('Personal Access Token');
         $token = $tokenResult->token;
         $token->save();
+        $tokenResult->name = $user->name;
+        $tokenResult->email = $user->email;
+        $tokenResult->user_id = $user->id;
+
         return $tokenResult;
     }
 

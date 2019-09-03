@@ -51,7 +51,11 @@ class AccountController extends Controller
             return response()->json(['message' => 'Unauthorized'], 401);
 
         return response()->json([
-            "data" => ['access_token' => $token->accessToken,
+            "data" => [
+                'user_id' => $token->user_id,
+                'name' => $token->name,
+                'email' => $token->email,
+                'access_token' => $token->accessToken,
                 'token_type' => 'Bearer',
                 'expires_at' => Carbon::parse($token->token->expires_at)->toDateTimeString()]
         ]);
